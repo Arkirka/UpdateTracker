@@ -1,6 +1,7 @@
 package ru.tinkoff.edu.java.linkParser.handler;
 
-import ru.tinkoff.edu.java.linkParser.handler.util.LinkDelimiter;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 public final class StackOverflowLinkHandler extends AbstractLinkHandler {
     public StackOverflowLinkHandler(AbstractLinkHandler handler) {
@@ -11,11 +12,18 @@ public final class StackOverflowLinkHandler extends AbstractLinkHandler {
     public String handle(String link) {
         if (link == null || link.isBlank())
             return null;
-        var linkArray = LinkDelimiter.splitLink(link);
-        boolean sizeCondition = linkArray.length < 3;
-        boolean keyWordsCondition = !linkArray[0].contains("stackoverflow.com") || !linkArray[1].equals("questions");
-        if (sizeCondition || keyWordsCondition)
-            return next == null ? null : next.handle(link);
-        return linkArray[2];
+        String nextHandler = next == null ? null : next.handle(link);
+        try {
+            URL url = new URL(link);
+            var pathArray = url.getPath().split("/");
+            boolean sizeCondition = pathArray.length < 3;
+            boolean hostCondition = !url.getHost().contains("stackoverflow.com");
+            boolean keyWordsCondition = !pathArray[1].equals("questions");
+            if (hostCondition || sizeCondition || keyWordsCondition)
+                return nextHandler;
+            return pathArray[2];
+        } catch (MalformedURLException e) {
+            return nextHandler;
+        }
     }
 }

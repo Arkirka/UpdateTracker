@@ -1,6 +1,7 @@
 package ru.tinkoff.edu.java.linkParser.handler;
 
-import ru.tinkoff.edu.java.linkParser.handler.util.LinkDelimiter;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 public final class GitHubLinkHandler extends AbstractLinkHandler{
     public GitHubLinkHandler(AbstractLinkHandler handler) {
@@ -11,11 +12,17 @@ public final class GitHubLinkHandler extends AbstractLinkHandler{
     public String handle(String link) {
         if (link == null || link.isBlank())
             return null;
-        var linkArray = LinkDelimiter.splitLink(link);
-        boolean sizeCondition = linkArray.length < 3;
-        boolean keyWordsCondition = !linkArray[0].contains("github.com");
-        if (keyWordsCondition || sizeCondition)
-            return next == null ? null : next.handle(link);
-        return linkArray[1] + "/" + linkArray[2];
+        String nextHandler = next == null ? null : next.handle(link);
+        try {
+            URL url = new URL(link);
+            var pathArray = url.getPath().split("/");
+            boolean sizeCondition = pathArray.length < 3;
+            boolean hostCondition = !url.getHost().contains("github.com");
+            if (hostCondition || sizeCondition)
+                return nextHandler;
+            return pathArray[1] + "/" + pathArray[2];
+        } catch (MalformedURLException e) {
+            return nextHandler;
+        }
     }
 }
