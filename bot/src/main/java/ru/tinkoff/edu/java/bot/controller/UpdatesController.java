@@ -5,16 +5,15 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import ru.tinkoff.edu.java.bot.dto.LinkUpdateRequest;
-import ru.tinkoff.edu.java.bot.dto.LinkUpdateResponse;
+import ru.tinkoff.edu.java.bot.dto.LinkUpdate;
 
 @RestController
 @RequestMapping("/updates")
 public class UpdatesController {
 
     @PostMapping
-    public ResponseEntity<LinkUpdateResponse> createUpdate(@RequestBody LinkUpdateRequest linkUpdateRequest){
+    public ResponseEntity<Void> createUpdate(@RequestBody LinkUpdate linkUpdate){
         // TODO: здесь обработать обновление
-        return ResponseEntity.ok(new LinkUpdateResponse());
+        return ResponseEntity.ok().build();
     }
 }

@@ -18,13 +18,13 @@ public class LinkController {
     }
 
     @PostMapping
-    public ResponseEntity<LinkResponse> addLink(@RequestHeader("Tg-Chat-Id") Long chatId, @RequestBody AddLinkRequest request) {
+    public ResponseEntity<LinkResponse> addLink(@RequestHeader("Tg-Chat-Id") Long tgChatId, @RequestBody AddLinkRequest request) {
         // TODO: здесь нужно добавить отслеживание ссылки
         return ResponseEntity.ok(new LinkResponse());
     }
 
     @DeleteMapping
-    public ResponseEntity<LinkResponse> removeLink(@RequestHeader("Tg-Chat-Id") Long chatId, @RequestBody RemoveLinkRequest request) {
+    public ResponseEntity<LinkResponse> removeLink(@RequestHeader("Tg-Chat-Id") Long tgChatId, @RequestBody RemoveLinkRequest request) {
         // TODO: здесь нужно убрать отслеживание ссылки
         return ResponseEntity.ok(new LinkResponse());
     }
