@@ -1,4 +1,4 @@
-package ru.tinkoff.edu.java.scrapper.controller.exceptionHandler;
+package ru.tinkoff.edu.java.scrapper.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MethodArgumentNotValidException;

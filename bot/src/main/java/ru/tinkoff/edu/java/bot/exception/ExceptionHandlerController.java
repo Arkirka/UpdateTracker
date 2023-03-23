@@ -1,4 +1,4 @@
-package ru.tinkoff.edu.java.bot.controller.exception;
+package ru.tinkoff.edu.java.bot.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MethodArgumentNotValidException;
