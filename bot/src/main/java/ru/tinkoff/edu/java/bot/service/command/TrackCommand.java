@@ -19,7 +19,7 @@ public class TrackCommand implements Command{
     @Override
     public SendMessage handle(Update update) {
         log.info("Track command received from: " + update.message().from().id());
-        String userName = update.message().from().firstName() + " " + update.message().from().lastName();
-        return new SendMessage(update.message().chat().id(), "Добро пожаловать, " + userName + "!");
+        // TODO: здесь добавляется отслеживание ссылки
+        return new SendMessage(update.message().chat().id(), "Ссылка отслеживается");
     }
 }
