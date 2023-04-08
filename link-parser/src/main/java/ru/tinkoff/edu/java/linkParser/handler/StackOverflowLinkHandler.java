@@ -17,9 +17,11 @@ public final class StackOverflowLinkHandler extends AbstractLinkHandler {
             URL url = new URL(link);
             var pathArray = url.getPath().split("/");
             boolean sizeCondition = pathArray.length < 3;
+            if (sizeCondition)
+                return nextHandler;
             boolean hostCondition = !url.getHost().contains("stackoverflow.com");
             boolean keyWordsCondition = !pathArray[1].equals("questions");
-            if (hostCondition || sizeCondition || keyWordsCondition)
+            if (hostCondition || keyWordsCondition)
                 return nextHandler;
             return pathArray[2];
         } catch (MalformedURLException e) {
