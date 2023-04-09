@@ -9,7 +9,7 @@ CREATE TABLE chat (
 CREATE TABLE link (
     id BIGINT NOT NULL PRIMARY KEY,
     link VARCHAR(255) NOT NULL,
-    link_status ENUM('TRACKED', 'UNTRACKED') NOT NULL,
+    link_status VARCHAR(10) NOT NULL CHECK (link_status IN ('TRACKED', 'UNTRACKED')),
     chat_id BIGINT NOT NULL,
-    FOREIGN KEY (chat_id) REFERENCES chat(id)
+    CONSTRAINT fk_chat FOREIGN KEY (chat_id) REFERENCES chat(id)
 );
