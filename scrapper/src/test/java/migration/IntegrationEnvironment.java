@@ -15,7 +15,7 @@ import java.sql.SQLException;
 
 public class IntegrationEnvironment {
 
-    private static final String MIGRATION_FILE = "migrations/master.xml";
+    private static final String MIGRATION_FILE = "db/changelog/migrations/master.xml";
 
     private static PostgreSQLContainer<?> container;
 
