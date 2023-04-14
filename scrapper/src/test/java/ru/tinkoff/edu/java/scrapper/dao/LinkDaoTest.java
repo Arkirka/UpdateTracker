@@ -36,7 +36,7 @@ public class LinkDaoTest extends IntegrationEnvironment {
 
     @Test
     public void testAdd() {
-        Link link = new Link(1L, "https://example.com", "TRACKED", 1L);
+        Link link = new Link(1L, "https://example.com", 1L);
         Chat chat = new Chat(1L);
 
         chatDao.add(chat);
@@ -46,19 +46,19 @@ public class LinkDaoTest extends IntegrationEnvironment {
         assertEquals(1, links.size());
         assertEquals(link.getId(), links.get(0).getId());
 
-        linkDao.remove(link.getId());
+        linkDao.removeByChatIdAndLink(link.getChatId(), link.getLink());
         chatDao.remove(chat.getId());
     }
 
     @Test
     public void testRemove() {
-        Link link = new Link(1L, "https://example.com", "UNTRACKED", 1L);
+        Link link = new Link(1L, "https://example.com", 1L);
         Chat chat = new Chat(1L);
 
         chatDao.add(chat);
         linkDao.add(link);
 
-        linkDao.remove(link.getId());
+        linkDao.removeByChatIdAndLink(link.getChatId(), link.getLink());
 
         List<Link> links = linkDao.findAll();
         assertTrue(links.isEmpty());
@@ -69,7 +69,7 @@ public class LinkDaoTest extends IntegrationEnvironment {
     @Test
     public void testFindAll() {
         List<Link> expected = LongStream.range(0L, 10L)
-                .mapToObj(x -> new Link(x, "https://example.com", "UNTRACKED", 1L))
+                .mapToObj(x -> new Link(x, "https://example.com", 1L))
                 .toList();
         Chat chat = new Chat(1L);
 
@@ -82,7 +82,7 @@ public class LinkDaoTest extends IntegrationEnvironment {
             assertEquals(expected.get(i).toString(), actual.get(i).toString());
         }
 
-        expected.forEach(x -> linkDao.remove(x.getId()));
+        expected.forEach(x -> linkDao.removeByChatIdAndLink(x.getChatId(), x.getLink()));
         chatDao.remove(chat.getId());
     }
 }

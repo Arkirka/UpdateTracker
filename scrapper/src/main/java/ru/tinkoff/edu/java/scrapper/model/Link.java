@@ -10,6 +10,5 @@ import lombok.*;
 public class Link {
     private long id;
     private String link;
-    private String linkStatus;
     private long chatId;
 }
