@@ -1,31 +1,52 @@
 package ru.tinkoff.edu.java.scrapper.controller;
 
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.tinkoff.edu.java.scrapper.dto.AddLinkRequest;
 import ru.tinkoff.edu.java.scrapper.dto.LinkResponse;
 import ru.tinkoff.edu.java.scrapper.dto.ListLinksResponse;
 import ru.tinkoff.edu.java.scrapper.dto.RemoveLinkRequest;
+import ru.tinkoff.edu.java.scrapper.service.LinkService;
+
+import java.net.URI;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/links")
 public class LinkController {
+    private final LinkService linkService;
 
     @GetMapping
     public ResponseEntity<ListLinksResponse> getAll(@RequestHeader("Tg-Chat-Id") Long tgChatId){
-        // TODO: здесь нужно получить ссылки
-        return ResponseEntity.ok(new ListLinksResponse());
+        var list = linkService.listAll(tgChatId).stream()
+                .map(x -> new LinkResponse(x.getId(), x.getLink()))
+                .toList();
+        return ResponseEntity.ok(
+                new ListLinksResponse(list, list.size())
+        );
     }
 
     @PostMapping
-    public ResponseEntity<LinkResponse> addLink(@RequestHeader("Tg-Chat-Id") Long tgChatId, @RequestBody AddLinkRequest request) {
-        // TODO: здесь нужно добавить отслеживание ссылки
-        return ResponseEntity.ok(new LinkResponse());
+    public ResponseEntity<?> addLink(@RequestHeader("Tg-Chat-Id") Long tgChatId,
+                                     @RequestBody AddLinkRequest request) {
+        var link = linkService.add(tgChatId, URI.create(request.getLink()));
+        if (link.isEmpty())
+            return new ResponseEntity<>("Unable to add link", HttpStatus.INTERNAL_SERVER_ERROR);
+        return ResponseEntity.ok(
+                new LinkResponse(link.get().getId(), link.get().getLink())
+        );
     }
 
     @DeleteMapping
-    public ResponseEntity<LinkResponse> removeLink(@RequestHeader("Tg-Chat-Id") Long tgChatId, @RequestBody RemoveLinkRequest request) {
-        // TODO: здесь нужно убрать отслеживание ссылки
-        return ResponseEntity.ok(new LinkResponse());
+    public ResponseEntity<?> removeLink(@RequestHeader("Tg-Chat-Id") Long tgChatId,
+                                                   @RequestBody RemoveLinkRequest request) {
+        var link = linkService.remove(tgChatId, URI.create(request.getLink()));
+        if (link.isEmpty())
+            return new ResponseEntity<>("Unable to remove link", HttpStatus.INTERNAL_SERVER_ERROR);
+        return ResponseEntity.ok(
+                new LinkResponse(link.get().getId(), link.get().getLink())
+        );
     }
 }
