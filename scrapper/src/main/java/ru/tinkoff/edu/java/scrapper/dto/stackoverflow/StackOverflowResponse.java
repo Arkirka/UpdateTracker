@@ -1,4 +1,4 @@
-package ru.tinkoff.edu.java.scrapper.dto;
+package ru.tinkoff.edu.java.scrapper.dto.stackoverflow;
 
 import lombok.Getter;
 import lombok.Setter;

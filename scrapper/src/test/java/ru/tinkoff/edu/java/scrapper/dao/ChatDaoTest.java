@@ -55,7 +55,7 @@ public class ChatDaoTest extends IntegrationEnvironment {
 
         chatDao.remove(chat.getId());
 
-        List<Link> links = linkDao.findAll();
+        List<Link> links = linkDao.findAllByTgChatId(chat.getId());
         assertTrue(links.isEmpty());
 
         chatDao.remove(chat.getId());

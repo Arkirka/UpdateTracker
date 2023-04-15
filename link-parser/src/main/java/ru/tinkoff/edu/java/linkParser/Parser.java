@@ -4,10 +4,12 @@ import ru.tinkoff.edu.java.linkParser.handler.AbstractLinkHandler;
 import ru.tinkoff.edu.java.linkParser.handler.GitHubLinkHandler;
 import ru.tinkoff.edu.java.linkParser.handler.StackOverflowLinkHandler;
 
+import java.util.Optional;
+
 public record Parser(String link) {
-    public String parse() {
+    public Optional<String> parse() {
         AbstractLinkHandler handler = getHandlerChain();
-        return handler.handle(link);
+        return Optional.of(handler.handle(link));
     }
 
     private AbstractLinkHandler getHandlerChain(){

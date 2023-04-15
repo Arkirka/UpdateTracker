@@ -7,6 +7,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
+import ru.tinkoff.edu.java.scrapper.constant.LinkType;
 import ru.tinkoff.edu.java.scrapper.model.Chat;
 import ru.tinkoff.edu.java.scrapper.model.Link;
 
@@ -36,13 +37,14 @@ public class LinkDaoTest extends IntegrationEnvironment {
 
     @Test
     public void testAdd() {
-        Link link = new Link(1L, "https://example.com", 1L);
+        Link link = new Link(1L, "https://example.com", 1L,
+                null, null, LinkType.GITHUB);
         Chat chat = new Chat(1L);
 
         chatDao.add(chat);
         linkDao.add(link);
 
-        List<Link> links = linkDao.findAll();
+        List<Link> links = linkDao.findAllByTgChatId(chat.getId());
         assertEquals(1, links.size());
         assertEquals(link.getId(), links.get(0).getId());
 
@@ -52,7 +54,8 @@ public class LinkDaoTest extends IntegrationEnvironment {
 
     @Test
     public void testRemove() {
-        Link link = new Link(1L, "https://example.com", 1L);
+        Link link = new Link(1L, "https://example.com", 1L,
+                null, null, LinkType.GITHUB);
         Chat chat = new Chat(1L);
 
         chatDao.add(chat);
@@ -60,7 +63,7 @@ public class LinkDaoTest extends IntegrationEnvironment {
 
         linkDao.removeByChatIdAndLink(link.getChatId(), link.getLink());
 
-        List<Link> links = linkDao.findAll();
+        List<Link> links = linkDao.findAllByTgChatId(chat.getId());
         assertTrue(links.isEmpty());
 
         chatDao.remove(chat.getId());
@@ -69,14 +72,19 @@ public class LinkDaoTest extends IntegrationEnvironment {
     @Test
     public void testFindAll() {
         List<Link> expected = LongStream.range(0L, 10L)
-                .mapToObj(x -> new Link(x, "https://example.com", 1L))
+                .mapToObj(x -> new Link(x,
+                        "https://example.com",
+                        1L,
+                        null,
+                        null,
+                        LinkType.GITHUB))
                 .toList();
         Chat chat = new Chat(1L);
 
         chatDao.add(chat);
         expected.forEach(linkDao::add);
 
-        List<Link> actual = linkDao.findAll();
+        List<Link> actual = linkDao.findAllByTgChatId(chat.getId());
         assertFalse(actual.isEmpty());
         for (int i = 0; i < expected.size(); i++) {
             assertEquals(expected.get(i).toString(), actual.get(i).toString());

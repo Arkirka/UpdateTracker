@@ -60,6 +60,14 @@
             <version>${sringdoc.version}</version>
         </dependency>
 
+        <!-- Module -->
+
+        <dependency>
+            <groupId>ru.tinkoff.edu</groupId>
+            <artifactId>link-parser</artifactId>
+            <version>0.0.1</version>
+        </dependency>
+
         <!-- Database -->
 
         <dependency>
@@ -70,7 +78,7 @@
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
-            <scope>runtime</scope>
+            <version>42.3.8</version>
         </dependency>
 
         <!-- Test -->

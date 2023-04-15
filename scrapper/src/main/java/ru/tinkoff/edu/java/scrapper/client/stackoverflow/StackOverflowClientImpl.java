@@ -1,7 +1,7 @@
 package ru.tinkoff.edu.java.scrapper.client.stackoverflow;
 
 import org.springframework.web.reactive.function.client.WebClient;
-import ru.tinkoff.edu.java.scrapper.dto.StackOverflowResponse;
+import ru.tinkoff.edu.java.scrapper.dto.stackoverflow.StackOverflowResponse;
 
 public class StackOverflowClientImpl implements StackOverflowClient{
     private static final String DEFAULT_URL = "https://api.stackexchange.com/2.3";

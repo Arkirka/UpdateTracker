@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ru.tinkoff.edu.java.scrapper.client.github.GitHubClient;
 import ru.tinkoff.edu.java.scrapper.dto.AddLinkRequest;
 import ru.tinkoff.edu.java.scrapper.dto.LinkResponse;
 import ru.tinkoff.edu.java.scrapper.dto.ListLinksResponse;
@@ -17,10 +18,12 @@ import java.net.URI;
 @RequestMapping("/links")
 public class LinkController {
     private final LinkService linkService;
+    // TODO: remove this field
+    private final GitHubClient gitHubClient;
 
     @GetMapping
     public ResponseEntity<ListLinksResponse> getAll(@RequestHeader("Tg-Chat-Id") Long tgChatId){
-        var list = linkService.listAll(tgChatId).stream()
+        var list = linkService.findAllByTgChatId(tgChatId).stream()
                 .map(x -> new LinkResponse(x.getId(), x.getLink()))
                 .toList();
         return ResponseEntity.ok(
@@ -48,5 +51,13 @@ public class LinkController {
         return ResponseEntity.ok(
                 new LinkResponse(link.get().getId(), link.get().getLink())
         );
+    }
+
+    // TODO: remove this method
+    @GetMapping
+    @RequestMapping("/{owner}/{repo}")
+    public ResponseEntity<?> testClient(@PathVariable("owner") String owner, @PathVariable("repo") String repo) {
+        var some = gitHubClient.fetchLastRepositoryEvent(owner, repo);
+        return ResponseEntity.ok(some);
     }
 }
