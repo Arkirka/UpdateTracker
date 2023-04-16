@@ -11,7 +11,7 @@ import ru.tinkoff.edu.java.scrapper.client.stackoverflow.StackOverflowClient;
 import ru.tinkoff.edu.java.scrapper.constant.GitHubEventType;
 import ru.tinkoff.edu.java.scrapper.constant.LinkType;
 import ru.tinkoff.edu.java.scrapper.dto.bot.LinkUpdate;
-import ru.tinkoff.edu.java.scrapper.model.Link;
+import ru.tinkoff.edu.java.scrapper.model.LinkModel;
 import ru.tinkoff.edu.java.scrapper.service.LinkService;
 
 import java.sql.Date;
@@ -37,8 +37,8 @@ public class LinkUpdaterScheduler {
 
     private void checkStackOverflowLinks() {
         HashMap<String, List<Long>> linkPerChatIds = new HashMap<>();
-        List<Link> linkList = linkService.findAllOldByLinkType(LinkType.STACKOVERFLOW);
-        for (Link link : linkList){
+        List<LinkModel> linkList = linkService.findAllOldByLinkType(LinkType.STACKOVERFLOW);
+        for (LinkModel link : linkList){
             var questionId = new Parser(link.getLink()).parse();
             if (questionId.isEmpty())
                 continue;
@@ -69,10 +69,10 @@ public class LinkUpdaterScheduler {
     }
 
     private void checkGitHubLinks(){
-        List<Link> linkList = linkService.findAllOldByLinkType(LinkType.GITHUB);
+        List<LinkModel> linkList = linkService.findAllOldByLinkType(LinkType.GITHUB);
         HashMap<String, List<Long>> linkAndDescriptionPerChatIds = new HashMap<>();
 
-        for (Link link : linkList){
+        for (LinkModel link : linkList){
             var ownerAndRepo = new Parser(link.getLink()).parse();
             if (ownerAndRepo.isEmpty())
                 continue;
@@ -107,7 +107,7 @@ public class LinkUpdaterScheduler {
     }
 
 
-    private void markLinkVerified(Link link, String lastUpdatedId){
+    private void markLinkVerified(LinkModel link, String lastUpdatedId){
         link.setLastUpdatedId(lastUpdatedId);
         link.setLastChecked(new Date(new java.util.Date(
                 System.currentTimeMillis() + TimeUnit.MINUTES.toMillis(5)

@@ -1,4 +1,4 @@
-package ru.tinkoff.edu.java.scrapper.dao;
+package ru.tinkoff.edu.java.scrapper.domain;
 
 import migration.IntegrationEnvironment;
 import org.junit.Test;
@@ -7,8 +7,10 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
-import ru.tinkoff.edu.java.scrapper.model.Chat;
-import ru.tinkoff.edu.java.scrapper.model.Link;
+import ru.tinkoff.edu.java.scrapper.domain.jdbc.ChatDao;
+import ru.tinkoff.edu.java.scrapper.domain.jdbc.LinkDao;
+import ru.tinkoff.edu.java.scrapper.model.ChatModel;
+import ru.tinkoff.edu.java.scrapper.model.LinkModel;
 
 import javax.sql.DataSource;
 import java.util.List;
@@ -36,11 +38,11 @@ public class ChatDaoTest extends IntegrationEnvironment {
 
     @Test
     public void testAdd() {
-        Chat chat = new Chat(1L);
+        ChatModel chat = new ChatModel(1L);
 
         chatDao.add(chat);
 
-        List<Chat> chatList = chatDao.findAll();
+        List<ChatModel> chatList = chatDao.findAll();
         assertEquals(1, chatList.size());
         assertEquals(chat.getId(), chatList.get(0).getId());
 
@@ -49,13 +51,13 @@ public class ChatDaoTest extends IntegrationEnvironment {
 
     @Test
     public void testRemove() {
-        Chat chat = new Chat(1L);
+        ChatModel chat = new ChatModel(1L);
 
         chatDao.add(chat);
 
         chatDao.remove(chat.getId());
 
-        List<Link> links = linkDao.findAllByTgChatId(chat.getId());
+        List<LinkModel> links = linkDao.findAllByTgChatId(chat.getId());
         assertTrue(links.isEmpty());
 
         chatDao.remove(chat.getId());
@@ -63,13 +65,13 @@ public class ChatDaoTest extends IntegrationEnvironment {
 
     @Test
     public void testFindAll() {
-        List<Chat> expected = LongStream.range(0L, 10L)
-                .mapToObj(Chat::new)
+        List<ChatModel> expected = LongStream.range(0L, 10L)
+                .mapToObj(ChatModel::new)
                 .toList();
 
         expected.forEach(chatDao::add);
 
-        List<Chat> actual = chatDao.findAll();
+        List<ChatModel> actual = chatDao.findAll();
         assertFalse(actual.isEmpty());
         for (int i = 0; i < expected.size(); i++) {
             assertEquals(expected.get(i).toString(), actual.get(i).toString());

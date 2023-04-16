@@ -1,4 +1,4 @@
-package ru.tinkoff.edu.java.scrapper.dao;
+package ru.tinkoff.edu.java.scrapper.domain.jdbc;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -6,7 +6,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
-import ru.tinkoff.edu.java.scrapper.model.Chat;
+import ru.tinkoff.edu.java.scrapper.model.ChatModel;
 
 import java.sql.PreparedStatement;
 import java.sql.Statement;
@@ -17,7 +17,7 @@ import java.util.List;
 public class ChatDao {
     private final JdbcTemplate jdbcTemplate;
 
-    public Chat add(Chat chat) {
+    public ChatModel add(ChatModel chat) {
         String sql = "INSERT INTO chat (id) VALUES (?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(con -> {
@@ -31,23 +31,23 @@ public class ChatDao {
         return chat;
     }
 
-    public Chat remove(long chatId) {
+    public ChatModel remove(long chatId) {
         String sql = "DELETE FROM chat WHERE id = ?";
-        Chat removedChat = findById(chatId);
+        ChatModel removedChat = findById(chatId);
         jdbcTemplate.update(sql, chatId);
         return removedChat;
     }
 
-    public Chat findById(long chatId) {
+    public ChatModel findById(long chatId) {
         String sql = "SELECT * FROM chat WHERE id = ?";
-        RowMapper<Chat> rowMapper = (resultSet, rowNum) -> new Chat(resultSet.getLong("id"));
-        List<Chat> chats = jdbcTemplate.query(sql, rowMapper, chatId);
+        RowMapper<ChatModel> rowMapper = (resultSet, rowNum) -> new ChatModel(resultSet.getLong("id"));
+        List<ChatModel> chats = jdbcTemplate.query(sql, rowMapper, chatId);
         return chats.isEmpty() ? null : chats.get(0);
     }
 
-    public List<Chat> findAll() {
+    public List<ChatModel> findAll() {
         return jdbcTemplate.query("SELECT * FROM chat", (resultSet, rowNum) ->
-                new Chat(resultSet.getLong("id")));
+                new ChatModel(resultSet.getLong("id")));
     }
 
     public boolean exists(long chatId) {
