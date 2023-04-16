@@ -1,9 +1,11 @@
 package ru.tinkoff.edu.java.scrapper.client.github;
 
 import ru.tinkoff.edu.java.scrapper.dto.github.GitHubEvent;
-import ru.tinkoff.edu.java.scrapper.dto.github.GitHubRepositoryResponse;
+
+import java.util.List;
 
 public interface GitHubClient {
-    GitHubRepositoryResponse fetchRepository(String owner, String repo);
     GitHubEvent[] fetchLastRepositoryEvent(String owner, String repo);
+    List<GitHubEvent> fetchRepositoryEventsBeforeId(String owner, String repo, String id);
+    List<GitHubEvent> fetchAllRepositoryEvents(String owner, String repo);
 }

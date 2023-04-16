@@ -19,13 +19,14 @@ public class LinkDao {
     private final JdbcTemplate jdbcTemplate;
 
     public Link add(Link link) {
-        String sql = "INSERT INTO link (link, chat_id, link_type) VALUES (?, ?, ?)";
+        String sql = "INSERT INTO link (link, chat_id, link_type, last_updated_id) VALUES (?, ?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(con -> {
             PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             ps.setString(1, link.getLink());
             ps.setLong(2, link.getChatId());
             ps.setString(3, link.getLinkType().toString());
+            ps.setString(4, link.getLastUpdatedId());
             return ps;
         }, keyHolder);
         if (keyHolder.getKeys() == null || keyHolder.getKeys().get("id") == null)

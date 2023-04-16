@@ -1,7 +1,7 @@
 package ru.tinkoff.edu.java.scrapper.client.stackoverflow;
 
-import ru.tinkoff.edu.java.scrapper.dto.stackoverflow.StackOverflowResponse;
+import ru.tinkoff.edu.java.scrapper.dto.stackoverflow.StackOverflowAnswerResponse;
 
 public interface StackOverflowClient {
-    StackOverflowResponse fetchQuestion(long questionId);
+    StackOverflowAnswerResponse fetchLastQuestionAnswer(long questionId);
 }
