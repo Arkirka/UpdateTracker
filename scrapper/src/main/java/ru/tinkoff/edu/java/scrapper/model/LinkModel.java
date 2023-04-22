@@ -11,7 +11,7 @@ import java.sql.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class Link {
+public class LinkModel {
     private long id;
     private String link;
     private long chatId;

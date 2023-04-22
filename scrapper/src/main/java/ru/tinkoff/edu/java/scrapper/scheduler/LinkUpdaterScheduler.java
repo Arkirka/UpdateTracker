@@ -8,14 +8,14 @@ import ru.tinkoff.edu.java.linkParser.Parser;
 import ru.tinkoff.edu.java.scrapper.client.bot.BotClient;
 import ru.tinkoff.edu.java.scrapper.client.github.GitHubClient;
 import ru.tinkoff.edu.java.scrapper.client.stackoverflow.StackOverflowClient;
+import ru.tinkoff.edu.java.scrapper.constant.GitHubEventType;
 import ru.tinkoff.edu.java.scrapper.constant.LinkType;
 import ru.tinkoff.edu.java.scrapper.dto.bot.LinkUpdate;
-import ru.tinkoff.edu.java.scrapper.model.Link;
+import ru.tinkoff.edu.java.scrapper.model.LinkModel;
 import ru.tinkoff.edu.java.scrapper.service.LinkService;
 
 import java.sql.Date;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 
@@ -36,47 +36,78 @@ public class LinkUpdaterScheduler {
     }
 
     private void checkStackOverflowLinks() {
-        List<Long> chatIds = new ArrayList<>();
-        List<Link> linkList = linkService.findAllOldByLinkType(LinkType.STACKOVERFLOW);
-        for (Link link : linkList){
+        HashMap<String, List<Long>> linkPerChatIds = new HashMap<>();
+        List<LinkModel> linkList = linkService.findAllOldByLinkType(LinkType.STACKOVERFLOW);
+        for (LinkModel link : linkList){
             var questionId = new Parser(link.getLink()).parse();
             if (questionId.isEmpty())
                 continue;
-            // TODO: в следующем задании добавится новый запрос в stackoverflow на получение answers и их id
-            // последний id ответа заменит эту строчку. Сейчас по заданию это не нужно
-            String lastEventId = "someId";
-            chatIds.add(link.getChatId());
-            markLinkVerified(link, lastEventId);
+
+            var response = stackOverflowClient.fetchLastQuestionAnswer(
+                    Long.parseLong(questionId.get())
+            );
+
+            if (response == null || response.getAnswers() == null || response.getAnswers().isEmpty())
+                continue;
+
+            var answer = response.getAnswers().get(0);
+            String lastAnswerId = answer.getAnswerId();
+
+            if (lastAnswerId.equals(link.getLastUpdatedId()))
+                continue;
+
+            if (!linkPerChatIds.containsKey(link.getLink()))
+                linkPerChatIds.put(link.getLink(), new ArrayList<>());
+
+            linkPerChatIds.get(link.getLink()).add(link.getChatId());
+            markLinkVerified(link, lastAnswerId);
         }
-        botClient.sendNotification(
-                new LinkUpdate(1L, "some", "just notification", chatIds)
-        );
+        final long[] index = {0};
+        linkPerChatIds.forEach((link, chatIds) -> botClient.sendNotification(
+                new LinkUpdate(index[0]++, link, "There are new answers to the question!", chatIds)
+        ));
     }
 
     private void checkGitHubLinks(){
-        List<Long> chatIds = new ArrayList<>();
-        List<Link> linkList = linkService.findAllOldByLinkType(LinkType.GITHUB);
-        for (Link link : linkList){
+        List<LinkModel> linkList = linkService.findAllOldByLinkType(LinkType.GITHUB);
+        HashMap<String, List<Long>> linkAndDescriptionPerChatIds = new HashMap<>();
+
+        for (LinkModel link : linkList){
             var ownerAndRepo = new Parser(link.getLink()).parse();
             if (ownerAndRepo.isEmpty())
                 continue;
+
             var ownerAndRepoArray = ownerAndRepo.get().split("/");
-            var lastRepositoryEvent =
-                    gitHubClient.fetchLastRepositoryEvent(
-                            ownerAndRepoArray[0], ownerAndRepoArray[1]
-                    );
-            String lastEventId = lastRepositoryEvent[0].getId();
+            var repositoryEvents = gitHubClient.fetchRepositoryEventsBeforeId(ownerAndRepoArray[0], ownerAndRepoArray[1], link.getLastUpdatedId());
+
+            if (repositoryEvents == null || repositoryEvents.isEmpty())
+                continue;
+
+            String lastEventId = repositoryEvents.get(0).getId();
             if (lastEventId.equals(link.getLastUpdatedId()))
                 continue;
-            chatIds.add(link.getChatId());
+
+            for (GitHubEventType type : GitHubEventType.values()) {
+                String linkAndDescription = link.getLink() + ":::" + type.getDescription();
+                repositoryEvents.stream()
+                        .filter(event -> type.getName().equals(event.getType()))
+                        .findFirst()
+                        .ifPresent(event -> linkAndDescriptionPerChatIds
+                                .computeIfAbsent(linkAndDescription, k -> new ArrayList<>())
+                                .add(link.getChatId()));
+            }
+
             markLinkVerified(link, lastEventId);
         }
-        botClient.sendNotification(
-                new LinkUpdate(1L, "some", "just notification", chatIds)
-        );
+        final long[] index = {0};
+        linkAndDescriptionPerChatIds.forEach((linkAndDescription, chatIds) -> {
+            var linkAndDescriptionArray = linkAndDescription.split(":::");
+            botClient.sendNotification(new LinkUpdate(index[0]++, linkAndDescriptionArray[0], linkAndDescriptionArray[1], chatIds));
+        });
     }
 
-    private void markLinkVerified(Link link, String lastUpdatedId){
+
+    private void markLinkVerified(LinkModel link, String lastUpdatedId){
         link.setLastUpdatedId(lastUpdatedId);
         link.setLastChecked(new Date(new java.util.Date(
                 System.currentTimeMillis() + TimeUnit.MINUTES.toMillis(5)
