@@ -1,4 +1,4 @@
-package ru.tinkoff.edu.java.scrapper.domain;
+package ru.tinkoff.edu.java.scrapper.domain.jdbc;
 
 import migration.IntegrationEnvironment;
 import org.junit.Test;
@@ -7,8 +7,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
-import ru.tinkoff.edu.java.scrapper.domain.jdbc.ChatDao;
-import ru.tinkoff.edu.java.scrapper.domain.jdbc.LinkDao;
 import ru.tinkoff.edu.java.scrapper.model.ChatModel;
 import ru.tinkoff.edu.java.scrapper.model.LinkModel;
 
@@ -17,14 +15,13 @@ import java.util.List;
 import java.util.stream.LongStream;
 
 import static org.junit.Assert.*;
-import static org.junit.Assert.assertEquals;
 
 @SpringBootTest
-public class ChatDaoTest extends IntegrationEnvironment {
+public class JdbcChatRepositoryTest extends IntegrationEnvironment {
     @Container
     public PostgreSQLContainer<?> postgresqlContainer = IntegrationEnvironment.getInstance();
-    private final LinkDao linkDao = new LinkDao(new JdbcTemplate(testDataSource()));
-    private final ChatDao chatDao = new ChatDao(new JdbcTemplate(testDataSource()));
+    private final JdbcLinkRepository jdbcLinkRepository = new JdbcLinkRepository(new JdbcTemplate(testDataSource()));
+    private final JdbcChatRepository jdbcChatRepository = new JdbcChatRepository(new JdbcTemplate(testDataSource()));
 
     public DataSource testDataSource() {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
@@ -40,27 +37,27 @@ public class ChatDaoTest extends IntegrationEnvironment {
     public void testAdd() {
         ChatModel chat = new ChatModel(1L);
 
-        chatDao.add(chat);
+        jdbcChatRepository.add(chat);
 
-        List<ChatModel> chatList = chatDao.findAll();
+        List<ChatModel> chatList = jdbcChatRepository.findAll();
         assertEquals(1, chatList.size());
         assertEquals(chat.getId(), chatList.get(0).getId());
 
-        chatDao.remove(chat.getId());
+        jdbcChatRepository.remove(chat.getId());
     }
 
     @Test
     public void testRemove() {
         ChatModel chat = new ChatModel(1L);
 
-        chatDao.add(chat);
+        jdbcChatRepository.add(chat);
 
-        chatDao.remove(chat.getId());
+        jdbcChatRepository.remove(chat.getId());
 
-        List<LinkModel> links = linkDao.findAllByTgChatId(chat.getId());
+        List<LinkModel> links = jdbcLinkRepository.findAllByTgChatId(chat.getId());
         assertTrue(links.isEmpty());
 
-        chatDao.remove(chat.getId());
+        jdbcChatRepository.remove(chat.getId());
     }
 
     @Test
@@ -69,14 +66,14 @@ public class ChatDaoTest extends IntegrationEnvironment {
                 .mapToObj(ChatModel::new)
                 .toList();
 
-        expected.forEach(chatDao::add);
+        expected.forEach(jdbcChatRepository::add);
 
-        List<ChatModel> actual = chatDao.findAll();
+        List<ChatModel> actual = jdbcChatRepository.findAll();
         assertFalse(actual.isEmpty());
         for (int i = 0; i < expected.size(); i++) {
             assertEquals(expected.get(i).toString(), actual.get(i).toString());
         }
 
-        expected.forEach(x -> chatDao.remove(x.getId()));
+        expected.forEach(x -> jdbcChatRepository.remove(x.getId()));
     }
 }

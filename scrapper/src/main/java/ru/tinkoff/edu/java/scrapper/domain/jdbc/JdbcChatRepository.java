@@ -14,7 +14,7 @@ import java.util.List;
 
 @Repository
 @RequiredArgsConstructor
-public class ChatDao {
+public class JdbcChatRepository {
     private final JdbcTemplate jdbcTemplate;
 
     public ChatModel add(ChatModel chat) {
