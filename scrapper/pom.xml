@@ -60,6 +60,14 @@
             <version>${sringdoc.version}</version>
         </dependency>
 
+        <!-- Module -->
+
+        <dependency>
+            <groupId>ru.tinkoff.edu</groupId>
+            <artifactId>link-parser</artifactId>
+            <version>0.0.1</version>
+        </dependency>
+
         <!-- Database -->
 
         <dependency>
@@ -70,7 +78,7 @@
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
-            <scope>runtime</scope>
+            <version>42.3.8</version>
         </dependency>
 
         <!-- Test -->
@@ -88,6 +96,18 @@
         <dependency>
             <groupId>org.liquibase</groupId>
             <artifactId>liquibase-core</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-test</artifactId>
+            <version>3.0.2</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
+            <version>6.0.4</version>
             <scope>test</scope>
         </dependency>
 

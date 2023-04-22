@@ -17,6 +17,5 @@ public class LinkUpdate {
     @NotBlank
     private String url;
     private String description;
-    @NotNull
     private List<Long> tgChatIds;
 }

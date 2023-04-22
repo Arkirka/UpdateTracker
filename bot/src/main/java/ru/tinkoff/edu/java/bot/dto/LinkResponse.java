@@ -6,6 +6,8 @@ import jakarta.validation.constraints.Positive;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.net.URI;
+
 @Getter
 @Setter
 public class LinkResponse {
@@ -13,5 +15,5 @@ public class LinkResponse {
     @Positive
     private Long id;
     @NotBlank
-    private String url;
+    private URI url;
 }

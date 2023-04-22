@@ -6,7 +6,6 @@ import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.BaseRequest;
 import com.pengrad.telegrambot.request.SendMessage;
 import com.pengrad.telegrambot.response.BaseResponse;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,7 +15,7 @@ public class TelegramBotImpl implements Bot {
     private final TelegramBot bot;
     private final UserMessageProcessor messageProcessor;
 
-    public TelegramBotImpl(@Value("#{@app-ru.tinkoff.edu.java.bot.configuration.ApplicationConfig.token()}") String token, UserMessageProcessor messageProcessor) {
+    public TelegramBotImpl(String token, UserMessageProcessor messageProcessor) {
         bot = new TelegramBot(token);
         this.messageProcessor = messageProcessor;
     }
