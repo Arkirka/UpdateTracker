@@ -1,7 +1,6 @@
 package ru.tinkoff.edu.java.scrapper.service.jdbc;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
 import ru.tinkoff.edu.java.scrapper.constant.LinkType;
 import ru.tinkoff.edu.java.scrapper.domain.jdbc.JdbcLinkRepository;
 import ru.tinkoff.edu.java.scrapper.model.LinkModel;
@@ -14,7 +13,6 @@ import java.util.List;
 import java.util.Optional;
 
 @RequiredArgsConstructor
-@Service
 public class JdbcLinkService implements LinkService {
     private final JdbcLinkRepository jdbcLinkRepository;
     private final ChatService chatService;

@@ -1,7 +1,6 @@
 package ru.tinkoff.edu.java.scrapper.service.jpa;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
 import ru.tinkoff.edu.java.scrapper.constant.LinkType;
 import ru.tinkoff.edu.java.scrapper.domain.jpa.JpaChatRepository;
 import ru.tinkoff.edu.java.scrapper.domain.jpa.JpaLinkRepository;
@@ -14,12 +13,10 @@ import java.net.URI;
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
-@Service
 public class JpaLinkService implements LinkService {
     private final JpaLinkRepository jpaLinkRepository;
     private final JpaChatRepository jpaChatRepository;
@@ -48,7 +45,7 @@ public class JpaLinkService implements LinkService {
             return Optional.empty();
 
         Link jpaLink = new Link(link.getId(), link.getLink(), link.getLastUpdatedId(),
-                link.getLastChecked(), link.getLinkType().toString(), chat.get());
+                new Timestamp(link.getLastChecked().getTime()), link.getLinkType().toString(), chat.get());
 
         jpaLink = jpaLinkRepository.save(jpaLink);
         return Optional.of(mapToModel(jpaLink));
@@ -95,7 +92,7 @@ public class JpaLinkService implements LinkService {
                 link.getLink(),
                 link.getChat().getId(),
                 link.getLastUpdatedId(),
-                Date.valueOf(Objects.requireNonNull(link.getLastChecked()).toLocalDate()),
+                new Date(link.getLastChecked().getTime()),
                 LinkType.valueOf(link.getLinkType())
         );
     }

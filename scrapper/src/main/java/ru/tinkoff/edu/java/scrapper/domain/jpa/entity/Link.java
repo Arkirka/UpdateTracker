@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.sql.Date;
+import java.sql.Timestamp;
 
 @Entity
 @AllArgsConstructor
@@ -21,7 +21,7 @@ public class Link {
     @Column(nullable = false)
     private String link;
     private String lastUpdatedId;
-    private Date lastChecked;
+    private Timestamp lastChecked;
     @Column(nullable = false)
     private String linkType;
 

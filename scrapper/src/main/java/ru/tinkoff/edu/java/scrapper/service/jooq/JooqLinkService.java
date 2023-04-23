@@ -2,7 +2,6 @@ package ru.tinkoff.edu.java.scrapper.service.jooq;
 
 import lombok.RequiredArgsConstructor;
 import org.jooq.DSLContext;
-import org.springframework.stereotype.Service;
 import ru.tinkoff.edu.java.scrapper.constant.LinkType;
 import ru.tinkoff.edu.java.scrapper.domain.jooq.tables.Link;
 import ru.tinkoff.edu.java.scrapper.domain.jooq.tables.records.LinkRecord;
@@ -19,7 +18,6 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-@Service
 @RequiredArgsConstructor
 public class JooqLinkService implements LinkService {
     private final LinkUtils linkUtils;
