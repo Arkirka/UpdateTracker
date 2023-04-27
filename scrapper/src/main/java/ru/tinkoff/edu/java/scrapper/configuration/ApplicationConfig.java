@@ -15,5 +15,6 @@ import ru.tinkoff.edu.java.scrapper.scheduler.Scheduler;
 public record ApplicationConfig(@NotNull String test,
                                 @Bean Scheduler scheduler,
                                 @Bean AccessType databaseAccessType,
-                                String exchangeName, String queueName, String routingKey) {
+                                String exchangeName, String queueName, String routingKey,
+                                boolean useQueue) {
 }
