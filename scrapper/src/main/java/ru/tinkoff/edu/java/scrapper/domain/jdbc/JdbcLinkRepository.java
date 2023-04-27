@@ -15,7 +15,7 @@ import java.util.List;
 
 @Repository
 @RequiredArgsConstructor
-public class LinkDao {
+public class JdbcLinkRepository {
     private final JdbcTemplate jdbcTemplate;
 
     public LinkModel add(LinkModel link) {

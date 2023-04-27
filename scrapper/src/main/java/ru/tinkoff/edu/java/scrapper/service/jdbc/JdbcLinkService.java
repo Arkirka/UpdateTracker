@@ -1,9 +1,8 @@
 package ru.tinkoff.edu.java.scrapper.service.jdbc;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
 import ru.tinkoff.edu.java.scrapper.constant.LinkType;
-import ru.tinkoff.edu.java.scrapper.domain.jdbc.LinkDao;
+import ru.tinkoff.edu.java.scrapper.domain.jdbc.JdbcLinkRepository;
 import ru.tinkoff.edu.java.scrapper.model.LinkModel;
 import ru.tinkoff.edu.java.scrapper.service.ChatService;
 import ru.tinkoff.edu.java.scrapper.service.LinkService;
@@ -14,9 +13,8 @@ import java.util.List;
 import java.util.Optional;
 
 @RequiredArgsConstructor
-@Service
 public class JdbcLinkService implements LinkService {
-    private final LinkDao linkDao;
+    private final JdbcLinkRepository jdbcLinkRepository;
     private final ChatService chatService;
     private final LinkUtils linkUtils;
 
@@ -29,26 +27,26 @@ public class JdbcLinkService implements LinkService {
         link.setChatId(tgChatId);
         link.setLinkType(linkUtils.getLinkType(url));
         link.setLastUpdatedId(linkUtils.getLastUpdatedId(link.getLinkType(), url));
-        return Optional.of(linkDao.add(link));
+        return Optional.of(jdbcLinkRepository.add(link));
     }
 
     @Override
     public Optional<LinkModel> update(LinkModel link) {
-        return Optional.of(linkDao.update(link));
+        return Optional.of(jdbcLinkRepository.update(link));
     }
 
     @Override
     public Optional<LinkModel> remove(long tgChatId, URI url) {
-        return Optional.of(linkDao.findByChatIdAndLink(tgChatId, url.getPath()));
+        return Optional.of(jdbcLinkRepository.findByChatIdAndLink(tgChatId, url.getPath()));
     }
 
     @Override
     public List<LinkModel> findAllByTgChatId(long tgChatId) {
-        return linkDao.findAllByTgChatId(tgChatId);
+        return jdbcLinkRepository.findAllByTgChatId(tgChatId);
     }
 
     @Override
     public List<LinkModel> findAllOldByLinkType(LinkType linkType) {
-        return linkDao.findAllOldByLinkType(linkType);
+        return jdbcLinkRepository.findAllOldByLinkType(linkType);
     }
 }
