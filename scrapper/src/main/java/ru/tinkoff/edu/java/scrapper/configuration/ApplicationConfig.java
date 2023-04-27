@@ -12,5 +12,8 @@ import ru.tinkoff.edu.java.scrapper.scheduler.Scheduler;
 @Validated
 @EnableScheduling
 @ConfigurationProperties(prefix = "app", ignoreUnknownFields = false)
-public record ApplicationConfig(@NotNull String test, @Bean Scheduler scheduler, @Bean AccessType databaseAccessType) {
+public record ApplicationConfig(@NotNull String test,
+                                @Bean Scheduler scheduler,
+                                @Bean AccessType databaseAccessType,
+                                String exchangeName, String queueName, String routingKey) {
 }
