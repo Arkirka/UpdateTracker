@@ -5,7 +5,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import ru.tinkoff.edu.java.linkParser.Parser;
-import ru.tinkoff.edu.java.scrapper.client.bot.BotClient;
 import ru.tinkoff.edu.java.scrapper.client.github.GitHubClient;
 import ru.tinkoff.edu.java.scrapper.client.stackoverflow.StackOverflowClient;
 import ru.tinkoff.edu.java.scrapper.constant.GitHubEventType;
@@ -13,6 +12,7 @@ import ru.tinkoff.edu.java.scrapper.constant.LinkType;
 import ru.tinkoff.edu.java.scrapper.dto.bot.LinkUpdate;
 import ru.tinkoff.edu.java.scrapper.model.LinkModel;
 import ru.tinkoff.edu.java.scrapper.service.LinkService;
+import ru.tinkoff.edu.java.scrapper.service.notification.NotificationService;
 
 import java.sql.Date;
 import java.util.*;
@@ -25,7 +25,7 @@ import java.util.concurrent.TimeUnit;
 public class LinkUpdaterScheduler {
     private final GitHubClient gitHubClient;
     private final StackOverflowClient stackOverflowClient;
-    private final BotClient botClient;
+    private final NotificationService notificationService;
     private final LinkService linkService;
 
     @Scheduled(fixedDelayString = "#{@scheduler.interval.toMillis()}000")
@@ -63,7 +63,7 @@ public class LinkUpdaterScheduler {
             markLinkVerified(link, lastAnswerId);
         }
         final long[] index = {0};
-        linkPerChatIds.forEach((link, chatIds) -> botClient.sendNotification(
+        linkPerChatIds.forEach((link, chatIds) -> notificationService.send(
                 new LinkUpdate(index[0]++, link, "There are new answers to the question!", chatIds)
         ));
     }
@@ -102,7 +102,7 @@ public class LinkUpdaterScheduler {
         final long[] index = {0};
         linkAndDescriptionPerChatIds.forEach((linkAndDescription, chatIds) -> {
             var linkAndDescriptionArray = linkAndDescription.split(":::");
-            botClient.sendNotification(new LinkUpdate(index[0]++, linkAndDescriptionArray[0], linkAndDescriptionArray[1], chatIds));
+            notificationService.send(new LinkUpdate(index[0]++, linkAndDescriptionArray[0], linkAndDescriptionArray[1], chatIds));
         });
     }
 
