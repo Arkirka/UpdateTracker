@@ -9,7 +9,7 @@ import java.util.Optional;
 public record Parser(String link) {
     public Optional<String> parse() {
         AbstractLinkHandler handler = getHandlerChain();
-        return Optional.of(handler.handle(link));
+        return Optional.ofNullable(handler.handle(link));
     }
 
     private AbstractLinkHandler getHandlerChain(){

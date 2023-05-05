@@ -5,10 +5,10 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
+import java.util.Optional;
 import java.util.stream.Stream;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class ParserTest {
@@ -16,7 +16,7 @@ class ParserTest {
     @ParameterizedTest
     @MethodSource("parse_shouldReturnValidLink_whenLinkValidCases")
     public void parse_shouldReturnValidLink_whenLinkValid(String source, String expected) {
-        assertEquals(new Parser(source).parse(), expected);
+        assertEquals(Optional.of(expected), new Parser(source).parse());
     }
 
     public Stream<Arguments> parse_shouldReturnValidLink_whenLinkValidCases() {
@@ -45,7 +45,7 @@ class ParserTest {
     @ParameterizedTest
     @MethodSource("parse_shouldReturnNotValid_whenLinkInvalidCases")
     public void parse_shouldReturnNotValid_whenLinkInvalid(String source) {
-        assertNull(new Parser(source).parse());
+        assertTrue(new Parser(source).parse().isEmpty());
     }
 
     public Stream<Arguments> parse_shouldReturnNotValid_whenLinkInvalidCases() {
