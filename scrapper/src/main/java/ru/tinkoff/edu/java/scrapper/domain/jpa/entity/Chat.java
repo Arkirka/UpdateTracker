@@ -9,15 +9,16 @@ import java.util.List;
 @NoArgsConstructor
 @Getter
 @Setter
+@Table(name = "chat")
 public class Chat {
     public Chat(Long id){
         this.id = id;
     }
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
+    @Column(name = "id")
     private Long id;
 
-    @OneToMany(mappedBy = "chat", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "chat")
     private List<Link> linkList;
 }
