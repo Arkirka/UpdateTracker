@@ -39,17 +39,6 @@ public class IntegrationEnvironment {
         return container;
     }
     private static void runLiquibaseMigration() {
-        /*try {
-            Connection connection = getConnection();
-            Database database = DatabaseFactory.getInstance().findCorrectDatabaseImplementation(new JdbcConnection(connection));
-            Liquibase liquibase = new Liquibase(MIGRATION_FILE, new ClassLoaderResourceAccessor(), database);
-            liquibase.update(new Contexts());
-            connection.close();
-        } catch (SQLException e) {
-            throw new RuntimeException("Failed to migrate Liquibase", e);
-        } catch (Exception e) {
-            throw new RuntimeException("Failed to run Liquibase", e);
-        }*/
         Path changelogPath = new File(".").toPath().toAbsolutePath().
                 getParent().getParent().resolve(MIGRATION_FILE);
 
