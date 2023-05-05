@@ -17,11 +17,12 @@ public class BotClientImpl implements BotClient{
         this.webClient = webClientBuilder.baseUrl(url).build();
     }
 
-    public void sendNotification(LinkUpdate linkUpdate){
+    @Override
+    public void send(LinkUpdate update) {
         this.webClient.post()
                 .uri("updates")
                 .header("Content-Type", "application/json")
-                .body(Mono.just(linkUpdate), LinkUpdate.class)
+                .body(Mono.just(update), LinkUpdate.class)
                 .retrieve()
                 .onStatus(
                         HttpStatusCode::isError,
