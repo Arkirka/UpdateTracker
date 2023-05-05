@@ -2,7 +2,7 @@
 
 --changeset vorobyov:create_chat_and_link_tables
 CREATE TABLE chat (
-    id BIGINT NOT NULL PRIMARY KEY
+    id SERIAL PRIMARY KEY
 );
 
 CREATE TABLE link (
