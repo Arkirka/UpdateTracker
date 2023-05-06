@@ -78,7 +78,9 @@ public class LinkUpdaterScheduler {
                 continue;
 
             var ownerAndRepoArray = ownerAndRepo.get().split("/");
-            var repositoryEvents = gitHubClient.fetchRepositoryEventsBeforeId(ownerAndRepoArray[0], ownerAndRepoArray[1], link.getLastUpdatedId());
+            var repositoryEvents = gitHubClient.fetchRepositoryEventsBeforeId(
+                ownerAndRepoArray[0], ownerAndRepoArray[1], link.getLastUpdatedId()
+            );
 
             if (repositoryEvents == null || repositoryEvents.isEmpty())
                 continue;
@@ -100,17 +102,21 @@ public class LinkUpdaterScheduler {
             markLinkVerified(link, lastEventId);
         }
         final long[] index = {0};
-        linkAndDescriptionPerChatIds.forEach((linkAndDescription, chatIds) -> {
-            var linkAndDescriptionArray = linkAndDescription.split(":::");
-            notificationService.send(new LinkUpdate(index[0]++, linkAndDescriptionArray[0], linkAndDescriptionArray[1], chatIds));
+        linkAndDescriptionPerChatIds
+            .forEach((linkAndDescription, chatIds) -> {
+                var linkAndDescriptionArray = linkAndDescription.split(":::");
+                notificationService.send(
+                    new LinkUpdate(index[0]++, linkAndDescriptionArray[0], linkAndDescriptionArray[1], chatIds)
+                );
         });
     }
 
 
     private void markLinkVerified(LinkModel link, String lastUpdatedId){
         link.setLastUpdatedId(lastUpdatedId);
+        final int updateTimeout = 5;
         link.setLastChecked(new Date(new java.util.Date(
-                System.currentTimeMillis() + TimeUnit.MINUTES.toMillis(5)
+                System.currentTimeMillis() + TimeUnit.MINUTES.toMillis(updateTimeout)
         ).getTime()));
         linkService.update(link);
     }

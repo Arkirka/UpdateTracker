@@ -10,13 +10,12 @@ public final class StackOverflowLinkHandler extends AbstractLinkHandler {
 
     @Override
     public String handle(String link) {
-        if (link == null || link.isBlank())
-            return null;
         String nextHandler = next == null ? null : next.handle(link);
         try {
             URL url = new URL(link);
             var pathArray = url.getPath().split("/");
-            boolean sizeCondition = pathArray.length < 3;
+            final int numPathParts = 3;
+            boolean sizeCondition = pathArray.length < numPathParts;
             if (sizeCondition)
                 return nextHandler;
             boolean hostCondition = !url.getHost().contains("stackoverflow.com");

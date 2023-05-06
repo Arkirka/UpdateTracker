@@ -27,7 +27,9 @@ public class RabbitMQConfiguration {
 
     @Bean
     public Binding binding(ApplicationConfig applicationConfig, Queue scrapperQueue, DirectExchange directExchange) {
-        return BindingBuilder.bind(scrapperQueue).to(directExchange).with(applicationConfig.rabbitMQConfig().routingKey());
+        return BindingBuilder.bind(scrapperQueue)
+            .to(directExchange)
+            .with(applicationConfig.rabbitMQConfig().routingKey());
     }
 
     @Bean

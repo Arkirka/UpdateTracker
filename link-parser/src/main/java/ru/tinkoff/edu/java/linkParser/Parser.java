@@ -8,6 +8,8 @@ import java.util.Optional;
 
 public record Parser(String link) {
     public Optional<String> parse() {
+        if (link == null || link.isBlank())
+            return Optional.empty();
         AbstractLinkHandler handler = getHandlerChain();
         return Optional.ofNullable(handler.handle(link));
     }

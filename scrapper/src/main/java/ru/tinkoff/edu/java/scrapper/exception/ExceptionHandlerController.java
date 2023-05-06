@@ -36,7 +36,11 @@ public class ExceptionHandlerController {
                 ex.getStackTrace());
     }
 
-    private ApiErrorResponse getApiErrorResponse(String description, String simpleName, String message, StackTraceElement[] stackTrace2) {
+    private ApiErrorResponse getApiErrorResponse(String description,
+        String simpleName,
+        String message,
+        StackTraceElement[] stackTrace2) {
+
         ApiErrorResponse errorResponse = new ApiErrorResponse();
         errorResponse.setDescription(description);
         errorResponse.setCode(HttpStatus.BAD_REQUEST.toString());

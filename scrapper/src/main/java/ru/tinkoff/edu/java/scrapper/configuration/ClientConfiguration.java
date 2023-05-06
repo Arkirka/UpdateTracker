@@ -14,11 +14,13 @@ import ru.tinkoff.edu.java.scrapper.client.stackoverflow.StackOverflowClientImpl
 @Configuration
 public class ClientConfiguration {
     @Bean
-    public GitHubClient githubClient(WebClient.Builder webClientBuilder, @Value("${github.client.base-url}") String baseUrl) {
+    public GitHubClient githubClient(WebClient.Builder webClientBuilder,
+        @Value("${github.client.base-url}") String baseUrl) {
         return new GitHubClientImpl(webClientBuilder, baseUrl);
     }
     @Bean
-    public StackOverflowClient stackOverflowClient(WebClient.Builder webClientBuilder, @Value("${stackoverflow.client.base-url}") String baseUrl) {
+    public StackOverflowClient stackOverflowClient(WebClient.Builder webClientBuilder,
+        @Value("${stackoverflow.client.base-url}") String baseUrl) {
         return new StackOverflowClientImpl(webClientBuilder, baseUrl);
     }
 

@@ -18,6 +18,7 @@ import java.util.List;
 public class JdbcLinkRepository {
     private final JdbcTemplate jdbcTemplate;
 
+    @SuppressWarnings("checkstyle:magicnumber")
     public LinkModel add(LinkModel link) {
         String sql = "INSERT INTO link (link, chat_id, link_type, last_updated_id) VALUES (?, ?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
@@ -35,6 +36,7 @@ public class JdbcLinkRepository {
         return link;
     }
 
+    @SuppressWarnings("checkstyle:magicnumber")
     public LinkModel update(LinkModel link) {
         String sql =
                 "UPDATE link SET link = ?, chat_id = ?, last_updated_id = ?, " +

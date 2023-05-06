@@ -31,7 +31,7 @@ public class GitHubClientImpl implements GitHubClient {
         if (id == null)
             return fetchAllRepositoryEvents(owner, repo);
 
-        int countOfEventsPerPage = 10;
+        final int countOfEventsPerPage = 10;
         int currentPage = 1;
         boolean found = false;
         List<GitHubEvent> allEvents = new ArrayList<>();
@@ -67,7 +67,7 @@ public class GitHubClientImpl implements GitHubClient {
 
     @Override
     public List<GitHubEvent> fetchAllRepositoryEvents(String owner, String repo) {
-        int countOfEventsPerPage = 10;
+        final int countOfEventsPerPage = 10;
         int currentPage = 1;
         List<GitHubEvent> allEvents = new ArrayList<>();
 

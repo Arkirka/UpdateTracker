@@ -20,16 +20,18 @@ public class LinkUtils {
         if (linkType == LinkType.GITHUB){
             var ownerAndRepo = new Parser(url.getPath()).parse().get().split("/");
             var events =  gitHubClient.fetchLastRepositoryEvent(ownerAndRepo[0], ownerAndRepo[1]);
-            if (events == null || events.length == 0)
-                return null;
-            return events[0].getId();
+
+            return events == null || events.length == 0
+                ? null
+                : events[0].getId();
         }
         if (linkType == LinkType.STACKOVERFLOW){
             var questionId = new Parser(url.getPath()).parse().get();
             var events = stackOverflowClient.fetchLastQuestionAnswer(Long.parseLong(questionId)).getAnswers();
-            if (events == null || events.size() == 0)
-                return null;
-            return String.valueOf(events.get(0).getAnswerId());
+
+            return events == null || events.size() == 0
+                ? null
+                : String.valueOf(events.get(0).getAnswerId());
         }
         return null;
     }

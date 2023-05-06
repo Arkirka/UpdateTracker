@@ -3,8 +3,7 @@ package ru.tinkoff.edu.java.scrapper.constant;
 public enum AccessType {
     JDBC("jdbc"),
     JPA("jpa"),
-    JOOQ("jooq")
-    ;
+    JOOQ("jooq");
 
     private final String text;
 
