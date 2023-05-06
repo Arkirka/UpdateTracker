@@ -19,3 +19,10 @@ jobs:
           cache: maven
       - name: Build with Maven
         run: mvn package -pl bot -am
+
+      - name: Push image to Github Container Registry
+        run: |
+           docker build --build-arg token=${{ secrets.BOT_TOKEN }} -t bot_image bot
+           docker login https://docker.pkg.github.com -u ${{ github.actor }} --password ${{ secrets.PRIVATE_TOKEN }}
+           docker tag bot_image ghcr.io/${{ github.repository }}/bot_image:latest
+           docker push ghcr.io/${{ github.repository }}/bot_image:latest
