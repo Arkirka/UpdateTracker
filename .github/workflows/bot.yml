@@ -23,6 +23,6 @@ jobs:
       - name: Push image to Github Container Registry
         run: |
            docker build --build-arg token=${{ secrets.BOT_TOKEN }} -t bot_image bot
-           docker login https://docker.pkg.github.com -u ${{ github.actor }} --password ${{ secrets.PRIVATE_TOKEN }}
-           docker tag bot_image ghcr.io/${{ github.repository }}/bot_image:latest
-           docker push ghcr.io/${{ github.repository }}/bot_image:latest
+           echo ${{ secrets.PRIVATE_TOKEN }} | docker login https://docker.pkg.github.com -u ${{ github.actor }} --password-stdin 
+           docker tag bot_image ghcr.io/${{ github.actor }}/update_tracker/bot_image:latest
+           docker push ghcr.io/${{ github.actor }}/update_tracker/bot_image:latest
