@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: Check style
+      - name: Check scrapper code style
         run: mvn -pl scrapper -am checkstyle:check
 
   build:

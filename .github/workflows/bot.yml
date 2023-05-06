@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: Check style
+      - name: Check bot code style
         run: mvn -pl bot -am checkstyle:check
 
   build:
