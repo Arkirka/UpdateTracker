@@ -7,6 +7,13 @@ on:
       - '.github/workflows/scrapper.yml'
 
 jobs:
+  checkstyle:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Check style
+        run: mvn -pl scrapper -am checkstyle:check
+
   build:
     runs-on: ubuntu-latest
     steps:
@@ -19,7 +26,7 @@ jobs:
           cache: maven
       - name: Build with Maven
         run: mvn package -pl scrapper -am
-        
+
       - name: Push image to Github Container Registry
         run: |
            docker build -t scrapper_image scrapper
