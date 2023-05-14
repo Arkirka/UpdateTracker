@@ -9,4 +9,5 @@ import ru.tinkoff.edu.java.bot.configuration.amqp.RabbitMQPropertiesConfig;
 @Validated
 @ConfigurationProperties(prefix = "app", ignoreUnknownFields = false)
 public record ApplicationConfig(@NotNull String test, @Bean @NotNull String token,
-                                @NotNull RabbitMQPropertiesConfig rabbitMQConfig) {}
+                                @NotNull RabbitMQPropertiesConfig rabbitMQConfig,
+                                @NotNull String metricsProcessedMessageCountName) {}

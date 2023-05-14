@@ -10,6 +10,7 @@ import ru.tinkoff.edu.java.scrapper.client.github.GitHubClient;
 import ru.tinkoff.edu.java.scrapper.client.github.GitHubClientImpl;
 import ru.tinkoff.edu.java.scrapper.client.stackoverflow.StackOverflowClient;
 import ru.tinkoff.edu.java.scrapper.client.stackoverflow.StackOverflowClientImpl;
+import ru.tinkoff.edu.java.scrapper.metric.MetricProcessor;
 
 @Configuration
 public class ClientConfiguration {
@@ -25,7 +26,9 @@ public class ClientConfiguration {
     }
 
     @Bean
-    public BotClient botClient(WebClient.Builder webClientBuilder, @Value("${bot.client.base-url}") String baseUrl) {
-        return new BotClientImpl(webClientBuilder, baseUrl);
+    public BotClient botClient(WebClient.Builder webClientBuilder,
+        @Value("${bot.client.base-url}") String baseUrl,
+        MetricProcessor metricProcessor) {
+        return new BotClientImpl(webClientBuilder, baseUrl, metricProcessor);
     }
 }
