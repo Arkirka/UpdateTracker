@@ -6,15 +6,19 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 import ru.tinkoff.edu.java.scrapper.dto.bot.LinkUpdate;
+import ru.tinkoff.edu.java.scrapper.metric.MetricProcessor;
 
 @Slf4j
 public class BotClientImpl implements BotClient{
     private static final String DEFAULT_URL = "http://localhost:8090";
     private final WebClient webClient;
 
-    public BotClientImpl(WebClient.Builder webClientBuilder, String baseUrl) {
+    private final MetricProcessor metricProcessor;
+
+    public BotClientImpl(WebClient.Builder webClientBuilder, String baseUrl, MetricProcessor metricProcessor) {
         String url = baseUrl == null || baseUrl.isBlank() ? DEFAULT_URL : baseUrl;
         this.webClient = webClientBuilder.baseUrl(url).build();
+        this.metricProcessor = metricProcessor;
     }
 
     @Override
@@ -34,5 +38,7 @@ public class BotClientImpl implements BotClient{
                         }
                 ).bodyToMono(String.class)
                 .subscribe(response -> log.debug("Send notification {}", response));
+
+        metricProcessor.incrementMessageCount();
     }
 }

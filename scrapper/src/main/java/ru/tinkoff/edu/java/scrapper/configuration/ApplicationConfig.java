@@ -17,5 +17,6 @@ public record ApplicationConfig(@NotNull String test,
                                 @Bean Scheduler scheduler,
                                 @Bean AccessType databaseAccessType,
                                 @NotNull RabbitMQPropertiesConfig rabbitMQConfig,
-                                @NotNull boolean useQueue) {
+                                @NotNull boolean useQueue,
+                                @NotNull String metricsProcessedMessageCountName) {
 }
