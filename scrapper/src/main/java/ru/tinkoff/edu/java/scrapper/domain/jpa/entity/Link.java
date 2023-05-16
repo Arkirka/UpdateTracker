@@ -13,6 +13,7 @@ import java.sql.Timestamp;
 @NoArgsConstructor
 @Getter
 @Setter
+@Table(name = "link")
 public class Link {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,7 +26,7 @@ public class Link {
     @Column(nullable = false)
     private String linkType;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "chat_id", nullable = false)
+    @ManyToOne()
+    @JoinColumn(name = "chat_id")
     private Chat chat;
 }

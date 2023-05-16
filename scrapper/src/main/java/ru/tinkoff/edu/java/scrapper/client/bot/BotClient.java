@@ -1,7 +1,6 @@
 package ru.tinkoff.edu.java.scrapper.client.bot;
 
-import ru.tinkoff.edu.java.scrapper.dto.bot.LinkUpdate;
+import ru.tinkoff.edu.java.scrapper.service.notification.NotificationService;
 
-public interface BotClient {
-    void sendNotification(LinkUpdate linkUpdate);
+public interface BotClient extends NotificationService {
 }

@@ -1,0 +1,35 @@
+name: Bot CI
+
+on:
+  push:
+    paths:
+      - 'bot/**'
+      - '.github/workflows/bot.yml'
+
+jobs:
+  checkstyle:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Check bot code style
+        run: mvn -pl bot -am checkstyle:check
+
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: maven
+      - name: Build with Maven
+        run: mvn package -pl bot -am
+
+      - name: Push image to Github Container Registry
+        run: |
+           docker build --build-arg token=${{ secrets.BOT_TOKEN }} -t bot_image bot
+           echo ${{ secrets.PRIVATE_TOKEN }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+           docker tag bot_image ghcr.io/arkirka/update_tracker/bot_image:latest
+           docker push ghcr.io/arkirka/update_tracker/bot_image:latest

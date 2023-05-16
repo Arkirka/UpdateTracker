@@ -5,7 +5,7 @@
                    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
 
     <changeSet author="vorobyov" id="create_chat_and_link_tables">
-        <sqlFile path="./schema.sql" relativeToChangelogFile="true" splitStatements="true" />
+        <sqlFile path="migrations/schema.sql" relativeToChangelogFile="true" splitStatements="true" />
     </changeSet>
     
     <changeSet id="add_last_updated_id_to_link" author="vorobyov">

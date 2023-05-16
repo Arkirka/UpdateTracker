@@ -14,5 +14,5 @@ public class GitHubEvent {
     @JsonProperty("type")
     private String type;
     @JsonProperty("created_at")
-    private Date created_at;
+    private Date createdAt;
 }
